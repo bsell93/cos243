@@ -3,24 +3,23 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.0'
 
-gem 'factory_girl'
-
-gem 'factory_girl_rails'
-
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 
 group :test do
   gem 'capybara'
+  gem 'factory_girl_rails'
 end
 
 group :development, :test do
   gem 'rspec-rails'
 end
 
+gem 'bcrypt-ruby', '~> 3.0.0'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
-gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass' 
+gem 'bootstrap-sass', github: 'thomas-mcdonald/bootstrap-sass'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -46,7 +45,7 @@ group :doc do
 end
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+# gem 'bcrypt-ruby', '~> 3.0.0'
 
 # Use unicorn as the app server
 # gem 'unicorn'

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GameContestServer</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <div id="content">
+    <nav id="navBar" class="navbar navbar-default" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+        <%= link_to 'Game Contest Server', root_path, :class => "navbar-brand" %>
+      </div>
+
+      <!-- Collect the nav links, forms, and other content for toggling -->
+      <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <ul class="nav navbar-nav">
+          <li <%= if current_page?(root_path) then ' class=active' end%>>
+            <%= link_to 'Home', root_path %>
+          </li>
+          <li <%= if current_page?(users_path) then ' class=active' end%>>
+            <%= link_to 'Users', users_path %>
+          </li>
+          <% if logged_in? %>
+
+            <li <%= if current_page?(user_path(current_user)) then ' class=active' end%>>
+              <%= link_to 'Profile', user_path(current_user) %>
+            </li>
+            <li <%= if current_page?(edit_user_path(current_user)) then ' class=active' end%>>
+              <%= link_to 'Settings', edit_user_path(current_user) %>
+            </li>
+            <li <%= if current_page?(logout_path) then ' class=active' end%>>
+              <%= link_to 'Log Out', logout_path, method: :delete %>
+            </li>
+
+          <% else %>
+            <li <%= if current_page?(signup_path) then ' class=active' end%>>
+              <%= link_to 'Sign Up', signup_path %>
+            </li>
+            <li <%= if current_page?(login_path) then ' class=active' end%>>
+              <%= link_to 'Log In', login_path %>
+            </li>
+
+          <% end %>
+        </ul>
+      </div><!-- /.navbar-collapse -->
+    </nav>
+
+    <% flash.each do |level, message| %>
+    <div class="alert alert-<%= level %>"><%= message %></div>
+    <% end %>
+    
+    <div class="container">
+      <%= yield %>
+    </div>
+  </div>
+
+</body>
+</html>
+
+
+<!--make a nav bar: name of the site, link to all users, make a user-->

@@ -3,20 +3,23 @@
 <div class="alert alert-danger">
 <p>There have <%= pluralize(@user.errors.count, 'error') %> </p>
 </div>
-<ul class="text-danger">
+<ul>
   <% @user.errors.full_messages.each do |message| %>
-  <li><%= message %></li>
+  <li class="text-danger"><%= message %></li>
   <% end %>
 </ul>
 <% end %>
 
-<%= f.label :username %>
+<%= f.label :username, 'Username' %>
 <%= f.text_field :username, class: 'form-control' %>
 
-<%= f.label :email %>
+<%= f.label :email, 'Email' %>
 <%= f.text_field :email, class: 'form-control' %>
 
-<%= f.label :password %>
+<%= f.label :chat_url, 'Chat_Url' %>
+<%= f.text_field :chat_url, class: 'form-control' %>
+
+<%= f.label :password, 'Password' %>
 <%= f.password_field :password, class: 'form-control' %>
 
 <%= f.label :password_confirmation, 'Confirmation' %>

@@ -9,17 +9,13 @@ class UsersController < ApplicationController
   end
   
   def new
-    if logged_in?
-      flash[:warning] = "Please log out to create a new user."
-      redirect_to root_path
-    end
     @user = User.new
   end
   
   def create
     @user = User.new(permitted_params)
     if @user.save
-      cookies.signed[:user_id] = @user.id
+      log_in(@user)
       flash[:success] = "Welcome to the site: #{@user.username}"
       redirect_to @user
     else
@@ -32,18 +28,11 @@ class UsersController < ApplicationController
   end
     
   def edit
-    if logged_in? && !current_user
-      flash[:warning] = "Please log in to edit."
-    end
   end
     
   def update
     @user = User.find(params[:id])
-    if logged_in? && !current_user
-      flash[:warning] = "Please log in to edit."
-      redirect_to login_path
-    end
-    if @user.update(permitted_params)
+    if @user.update_attributes(permitted_params)
       flash[:success] = "You successfully updated your profile."
       redirect_to @user
     else
@@ -53,13 +42,13 @@ class UsersController < ApplicationController
   
   def destroy
     @user = User.find(params[:id])
-    if @user.admin
-      flash[:danger] = "You can't delete an admin!!!"
-      redirect_to root_path
-    else
-      flash[:success] = "You successfully deleted #{@user.username}."
+    if !current_user?(@user)
       @user.destroy
+      flash[:success] = "You successfully deleted #{@user.username}."
       redirect_to users_path
+    else
+      flash[:danger] = "You can't delete yourself!!!"
+      redirect_to root_path
     end
   end
     
@@ -91,7 +80,7 @@ class UsersController < ApplicationController
 	end
 	
 	def ensure_admin_user
-		redirect_to users_path unless current_user.admin?
+    redirect_to users_path, flash: {:danger => "Must be admin!"} unless current_user.admin?
 	end
   
 end

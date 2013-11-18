@@ -36,4 +36,12 @@ GameContestServer::Application.configure do
 
   # Speed up tests by lowering bcrypt's cost function.
   ActiveModel::SecurePassword.min_cost = true
+<<<<<<< HEAD
 end
+=======
+
+  # Don't advance time so that it is easier to compare with
+  # Time.current properly
+  Timecop.freeze(Time.utc(2013))
+end
+>>>>>>> a4d5c3fc93b8426306eaf284083ad702a88ff2a6

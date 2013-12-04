@@ -1,15 +1,19 @@
 class UsersController < ApplicationController
 	before_action :ensure_user_logged_in,     only: [:edit, :update]
-  before_action :ensure_user_not_logged_in, only: [:create, :new]
+  before_action :ensure_not_logged_in,      only: [:create, :new]
 	before_action :ensure_correct_user,       only: [:edit, :update]
 	before_action :ensure_admin_user,         only: [:destroy]
   
+  respond_to :html, :json, :xml
+  
   def index
     @users = User.all
+    respond_with(@user)
   end
   
   def new
     @user = User.new
+    respond_with(@user)
   end
   
   def create
@@ -17,14 +21,13 @@ class UsersController < ApplicationController
     if @user.save
       log_in(@user)
       flash[:success] = "Welcome to the site: #{@user.username}"
-      redirect_to @user
-    else
-      render 'new'
     end
+    respond_with(@user)
   end
     
   def show
     @user = User.find(params[:id])
+    respond_with(@user)
   end
     
   def edit
@@ -34,22 +37,14 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user.update_attributes(permitted_params)
       flash[:success] = "You successfully updated your profile."
-      redirect_to @user
-    else
-      render 'edit'
     end
+    respond_with(@user)
   end
   
   def destroy
-    @user = User.find(params[:id])
-    if !current_user?(@user)
-      @user.destroy
-      flash[:success] = "You successfully deleted #{@user.username}."
-      redirect_to users_path
-    else
-      flash[:danger] = "You can't delete yourself!!!"
-      redirect_to root_path
-    end
+    @user.destroy
+    flash[:success] = "User destroyed."
+    respond_with(@user)
   end
     
   private
@@ -64,7 +59,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def ensure_user_not_logged_in
+  def ensure_not_logged_in
     if logged_in?
       flash[:warning] = "You are logged in!"
       redirect_to root_path
@@ -80,7 +75,10 @@ class UsersController < ApplicationController
 	end
 	
 	def ensure_admin_user
-    redirect_to users_path, flash: {:danger => "Must be admin!"} unless current_user.admin?
+    @user = User.find(params[:id])
+    if !current_user.admin? || current_user?(@user)
+      redirect_to root_path, flash: { :danger => "Must be admin!" }
+    end
 	end
   
 end
